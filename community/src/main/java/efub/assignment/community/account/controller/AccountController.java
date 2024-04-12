@@ -18,7 +18,7 @@ public class AccountController { // 클라이언트로부터 요청을 받아오
 
     /* 계정 생성 기능 */
     @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public SignUpResponseDto signUp(@RequestBody @Valid final SignUpRequestDto requestDto) { // 보내는거 받는거 전부 dto 타입임
 
         Long id = accountService.signUp(requestDto); // 여기서 로그인 과정을 거침
@@ -36,7 +36,7 @@ public class AccountController { // 클라이언트로부터 요청을 받아오
     }
 
     /* 계정 프로필 수정 */
-    @PatchMapping("profile/{member_id}")
+    @PatchMapping("/profile/{member_id}")
     @ResponseStatus(value = HttpStatus.OK)
     public AccountUpdateResponseDto update(@PathVariable final Long member_id, @RequestBody @Valid final AccountUpdateRequestDto requestDto) {
 
