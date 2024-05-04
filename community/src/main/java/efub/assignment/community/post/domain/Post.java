@@ -1,6 +1,7 @@
 package efub.assignment.community.post.domain;
 
 import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.entity.BaseTimeEntity;
 import efub.assignment.community.post.dto.post.PostRequestDto;
 import jakarta.persistence.*;
@@ -8,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // 테이블과의 매핑
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +31,10 @@ public class Post extends BaseTimeEntity {
 
     @Column(nullable = false, length = 1000)
     private String content;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder
     public Post(Account account, String title, String content) {

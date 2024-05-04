@@ -54,7 +54,8 @@ public class PostController {
 
     /*게시글 수정*/
     @PutMapping("/{id}") // patch는 일부 수정, put은 리소스 전체 수정
-    public PostResponseDto updatePost(@PathVariable(name = "id") Long id, @RequestBody @Valid final PostRequestDto dto) {
+    public PostResponseDto updatePost(@PathVariable(name = "id") Long id,
+                                      @RequestBody @Valid final PostRequestDto dto) {
         Long postId = postService.updatePost(id, dto);
         Post post = postService.findPostById(postId);
         return PostResponseDto.from(post, post.getAccount().getNickname());

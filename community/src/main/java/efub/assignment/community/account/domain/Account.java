@@ -1,12 +1,16 @@
 package efub.assignment.community.account.domain;
 
 
+import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static efub.assignment.community.account.domain.AccountStatus.REGISTERED;
 
@@ -38,6 +42,10 @@ public class Account extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING) // enum 타입 -> id(0,1)로 인식함
     private AccountStatus status; // REGISTERED or UNREGISTERED
+
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder
     public Account(String email, String password, String nickname, String university, String studentId, AccountStatus status) {
