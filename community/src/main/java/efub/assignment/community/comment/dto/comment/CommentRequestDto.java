@@ -1,12 +1,16 @@
 package efub.assignment.community.comment.dto.comment;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CommentRequestDto {
     private String accountId;
     private String content;
+
+    @Builder
+    public CommentRequestDto(String accountId, String content) {
+        this.accountId = accountId;
+        this.content = content;
+    }
 }
