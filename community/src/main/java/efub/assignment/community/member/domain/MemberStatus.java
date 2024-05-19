@@ -1,11 +1,11 @@
-package efub.assignment.community.account.domain;
+package efub.assignment.community.member.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum AccountStatus {
+public enum MemberStatus {
     REGISTERED(0, "등록상태", "사용자 등록상태"), // enum type
     UNREGISTERED(1, "해지", "사용자 해지상태");
 

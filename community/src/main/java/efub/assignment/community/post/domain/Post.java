@@ -1,6 +1,6 @@
 package efub.assignment.community.post.domain;
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.entity.BaseTimeEntity;
 import efub.assignment.community.post.dto.post.PostRequestDto;
@@ -24,7 +24,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne // 두 엔티티 사이의 다대일 관계
     @JoinColumn(name = "account_id", updatable = false) // 외래키 사용
-    private Account account;
+    private Member member;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -41,15 +41,15 @@ public class Post extends BaseTimeEntity {
 
 
     @Builder
-    public Post(Account account, String title, String content) {
-        this.account = account;
+    public Post(Member member, String title, String content) {
+        this.member = member;
         this.title = title;
         this.content = content;
 
     }
 
-    public void update(PostRequestDto dto, Account account){
-        this.account = account;
+    public void update(PostRequestDto dto, Member member){
+        this.member = member;
         this.title = dto.getTitle();
         this.content = dto.getContent();
 

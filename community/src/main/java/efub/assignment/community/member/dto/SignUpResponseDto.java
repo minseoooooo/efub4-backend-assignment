@@ -1,6 +1,6 @@
-package efub.assignment.community.account.dto;
+package efub.assignment.community.member.dto;
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +21,11 @@ public class SignUpResponseDto {
         this.university = university;
         this.studentId = studentId;
     }
-    public static SignUpResponseDto from(Account account) { //Account 엔티티 객체를 dto로 변환
+    public static SignUpResponseDto from(Member member) { //Member 엔티티 객체를 dto로 변환
         return new SignUpResponseDto(
-                account.getEmail(),
-                account.getNickname(),
-                account.getUniversity(),
-                account.getStudentId());
+                member.getEmail(),
+                member.getNickname(),
+                member.getUniversity(),
+                member.getStudentId());
     }
 }

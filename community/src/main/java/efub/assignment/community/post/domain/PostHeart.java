@@ -1,6 +1,6 @@
 package efub.assignment.community.post.domain;
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -28,12 +28,12 @@ public class PostHeart {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "작성자는 필수로 입력되어야 합니다.")
     @JoinColumn(name = "account_id", updatable = false)
-    private Account writer;
+    private Member writer;
 
 
     @Builder
-    public PostHeart(Post post, Account account) {
+    public PostHeart(Post post, Member member) {
         this.post = post;
-        this.writer = account;
+        this.writer = member;
     }
 }

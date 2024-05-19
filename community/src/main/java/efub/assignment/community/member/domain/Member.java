@@ -1,4 +1,4 @@
-package efub.assignment.community.account.domain;
+package efub.assignment.community.member.domain;
 
 
 import efub.assignment.community.comment.domain.Comment;
@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static efub.assignment.community.account.domain.AccountStatus.REGISTERED;
+import static efub.assignment.community.member.domain.MemberStatus.REGISTERED;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Account extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
 
     @Id // pk 생성
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,14 +41,14 @@ public class Account extends BaseTimeEntity {
 
 
     @Enumerated(EnumType.STRING) // enum 타입 -> id(0,1)로 인식함
-    private AccountStatus status; // REGISTERED or UNREGISTERED
+    private MemberStatus status; // REGISTERED or UNREGISTERED
 
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
     @Builder
-    public Account(String email, String password, String nickname, String university, String studentId, AccountStatus status) {
+    public Member(String email, String password, String nickname, String university, String studentId, MemberStatus status) {
         this.email = email;
         this.encondedPassword = password;
         this.nickname = nickname;
@@ -62,7 +62,7 @@ public class Account extends BaseTimeEntity {
     }
 
     public void withdrawAccount() {
-        this.status = AccountStatus.UNREGISTERED;
+        this.status = MemberStatus.UNREGISTERED;
     }
 
 

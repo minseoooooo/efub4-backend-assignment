@@ -1,6 +1,6 @@
 package efub.assignment.community.board.domain;
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import efub.assignment.community.board.dto.board.BoardRequestDto;
 import efub.assignment.community.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -20,10 +20,10 @@ public class Board extends BaseTimeEntity {
     @Column(name = "board_id", updatable = false)
     private Long boardId;
 
-    // 외래키(account id) 가져오기
+    // 외래키(member id) 가져오기
     @ManyToOne // board:account_id = many:one
     @JoinColumn(name = "account_id", updatable = false) // 외래키 사용 // updatable -> false???
-    private Account account;
+    private Member member;
 
     // 게시판 이름
     @Column(nullable = false, length = 20)
@@ -47,8 +47,8 @@ public class Board extends BaseTimeEntity {
     // 수정일 -> baseTimeEntity 받을꺼임
 
     @Builder
-    public Board(Account account, String hostNickname, String boardName, String boardInfo, String boardNotice) {
-        this.account = account;
+    public Board(Member member, String hostNickname, String boardName, String boardInfo, String boardNotice) {
+        this.member = member;
         this.hostNickname = hostNickname;
         this.boardName = boardName;
         this.boardInfo = boardInfo;
@@ -56,8 +56,8 @@ public class Board extends BaseTimeEntity {
     }
 
 
-    public void update(BoardRequestDto dto, Account account) {
-        this.account = account;
+    public void update(BoardRequestDto dto, Member member) {
+        this.member = member;
         this.hostNickname = dto.getHostNickname();
         this.boardName = dto.getBoardName();
     }

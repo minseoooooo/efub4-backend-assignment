@@ -1,14 +1,10 @@
 package efub.assignment.community.comment.controller;
 
 
-import efub.assignment.community.account.service.AccountService;
-import efub.assignment.community.comment.domain.Comment;
+import efub.assignment.community.member.service.MemberService;
 import efub.assignment.community.comment.dto.comment.AccountInfoRequestDto;
-import efub.assignment.community.comment.dto.comment.CommentRequestDto;
-import efub.assignment.community.comment.dto.comment.CommentResponseDto;
 import efub.assignment.community.comment.service.CommentHeartService;
 import efub.assignment.community.comment.service.CommentService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    private final AccountService accountService;
+    private final MemberService memberService;
     private final CommentHeartService commentHeartService;
 
 

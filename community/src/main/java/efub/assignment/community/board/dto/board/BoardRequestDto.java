@@ -1,6 +1,6 @@
 package efub.assignment.community.board.dto.board;
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import efub.assignment.community.board.domain.Board;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -29,9 +29,9 @@ public class BoardRequestDto { // 게시판 생성
     //@NotBlank(message = "게시판 공지는 필수입니다.")
     private String boardNotice;
 
-    public Board toEntity(Account account) {
+    public Board toEntity(Member member) {
         return Board.builder()
-                .account(account)
+                .member(member)
                 .hostNickname(hostNickname)
                 .boardName(boardName)
                 .boardInfo(boardInfo)

@@ -29,7 +29,7 @@ public class PostController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public PostResponseDto createNewPost(@RequestBody @Valid final PostRequestDto dto) { // http 요청의 본문을 객체로 매핑
         Post savedPost = postService.createNewPost(dto);
-        return PostResponseDto.from(savedPost, savedPost.getAccount().getNickname());
+        return PostResponseDto.from(savedPost, savedPost.getMember().getNickname());
     }
 
     /*게시글 조회_전체*/
@@ -38,7 +38,7 @@ public class PostController {
         List<PostResponseDto> list = new ArrayList<>();
         List<Post> posts = postService.findAllPosts();
         for (Post post : posts) {
-            PostResponseDto dto = PostResponseDto.from(post, post.getAccount().getNickname());
+            PostResponseDto dto = PostResponseDto.from(post, post.getMember().getNickname());
             list.add(dto);
 
         }
@@ -52,7 +52,7 @@ public class PostController {
     @GetMapping("/{id}")
     public PostResponseDto getOnePost(@PathVariable(name = "id") Long id) {
         Post post = postService.findPostById(id);
-        return PostResponseDto.from(post, post.getAccount().getNickname());
+        return PostResponseDto.from(post, post.getMember().getNickname());
     }
 
     /*게시글 수정*/
@@ -61,7 +61,7 @@ public class PostController {
                                       @RequestBody @Valid final PostRequestDto dto) {
         Long postId = postService.updatePost(id, dto);
         Post post = postService.findPostById(postId);
-        return PostResponseDto.from(post, post.getAccount().getNickname());
+        return PostResponseDto.from(post, post.getMember().getNickname());
 
     }
 

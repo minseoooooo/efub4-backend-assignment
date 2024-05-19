@@ -2,8 +2,8 @@ package efub.assignment.community.post.service;
 
 
 
-import efub.assignment.community.account.domain.Account;
-import efub.assignment.community.account.service.AccountService;
+import efub.assignment.community.member.domain.Member;
+import efub.assignment.community.member.service.MemberService;
 import efub.assignment.community.exception.CustomDeleteException;
 import efub.assignment.community.post.domain.Post;
 import efub.assignment.community.post.dto.post.PostRequestDto;
@@ -24,11 +24,11 @@ import static efub.assignment.community.exception.ErrorCode.PERMISSION_REJECTED_
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final AccountService accountService;
+    private final MemberService memberService;
 
     public Post createNewPost(PostRequestDto dto){ // 엔티티가 아닌 dto 를 파라미터로~~~
-        Account account = accountService.findAccountById(Long.parseLong(dto.getAccountId()));
-        Post post = dto.toEntity(account);
+        Member member = memberService.findAccountById(Long.parseLong(dto.getAccountId()));
+        Post post = dto.toEntity(member);
         Post savedPost = postRepository.save(post);
         return savedPost;
     }
@@ -54,15 +54,15 @@ public class PostService {
     public Long updatePost(Long id, PostRequestDto dto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("해당 id를 가진 Post를 찾을 수 없습니다.id="+id));
-        Account account = accountService.findAccountById(Long.parseLong(dto.getAccountId()));
-        post.update(dto, account);
+        Member member = memberService.findAccountById(Long.parseLong(dto.getAccountId()));
+        post.update(dto, member);
         return post.getPostId();
     }
 
     public void deletePost(Long id, Long accountId){
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 Post를 찾을 수 없습니다.id=" + id));
-        if(accountId!=post.getAccount().getAccountId()){
+        if(accountId!=post.getMember().getAccountId()){
             throw new CustomDeleteException(PERMISSION_REJECTED_USER);
         }
         postRepository.delete(post);

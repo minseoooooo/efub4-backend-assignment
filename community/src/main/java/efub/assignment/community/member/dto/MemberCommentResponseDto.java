@@ -1,7 +1,7 @@
-package efub.assignment.community.account.dto;
+package efub.assignment.community.member.dto;
 
 
-import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.member.domain.Member;
 import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.comment.dto.comment.CommentResponseDto;
 import lombok.AccessLevel;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountCommentResponseDto {
+public class MemberCommentResponseDto {
     private String writerNickname;
     private List<CommentResponseDto> accountCommentList;
     private Long count;
 
-    public static AccountCommentResponseDto of(Account account, List<Comment> commentList){
-        return AccountCommentResponseDto.builder()
-                .writerNickname(account.getNickname())
+    public static MemberCommentResponseDto of(Member member, List<Comment> commentList){
+        return MemberCommentResponseDto.builder()
+                .writerNickname(member.getNickname())
                 .accountCommentList(commentList.stream().map(CommentResponseDto::of).collect(Collectors.toList()))
                 .count((long) commentList.size())
                 .build();

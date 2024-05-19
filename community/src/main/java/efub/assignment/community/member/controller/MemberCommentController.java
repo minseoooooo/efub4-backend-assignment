@@ -1,8 +1,8 @@
-package efub.assignment.community.account.controller;
+package efub.assignment.community.member.controller;
 
-import efub.assignment.community.account.domain.Account;
-import efub.assignment.community.account.dto.AccountCommentResponseDto;
-import efub.assignment.community.account.service.AccountService;
+import efub.assignment.community.member.domain.Member;
+import efub.assignment.community.member.dto.MemberCommentResponseDto;
+import efub.assignment.community.member.service.MemberService;
 import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -18,19 +18,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/accounts/{accountId}/comments")
-public class AccountCommentController {
+public class MemberCommentController {
 
-    private final AccountService accountService;
+    private final MemberService memberService;
     private final CommentService commentService;
 
     /* 작성자별 댓글 목록 조회 */
     @GetMapping
-    public ResponseEntity<AccountCommentResponseDto> getAccountCommentList(@PathVariable("accountId") Long accountId){
-        Account writer = accountService.findAccountById(accountId);
+    public ResponseEntity<MemberCommentResponseDto> getAccountCommentList(@PathVariable("accountId") Long accountId){
+        Member writer = memberService.findAccountById(accountId);
         List<Comment> commentList = commentService.findAccountCommentList(writer);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(AccountCommentResponseDto.of(writer, commentList));
+                .body(MemberCommentResponseDto.of(writer, commentList));
     }
 }
 

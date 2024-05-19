@@ -1,8 +1,8 @@
 package efub.assignment.community.comment.service;
 
 
-import efub.assignment.community.account.domain.Account;
-import efub.assignment.community.account.service.AccountService;
+import efub.assignment.community.member.domain.Member;
+import efub.assignment.community.member.service.MemberService;
 import efub.assignment.community.comment.domain.Comment;
 import efub.assignment.community.comment.domain.CommentHeart;
 import efub.assignment.community.comment.dto.comment.AccountInfoRequestDto;
@@ -20,35 +20,35 @@ public class CommentHeartService {
     private final CommentService commentService;
     private final CommentHeartRepository commentHeartRepository;
 
-    private final AccountService accountService;
+    private final MemberService memberService;
 
     /* 댓글 좋아요 등록 */
     public void create(Long commentId, AccountInfoRequestDto requestDto) {
-        Account account = accountService.findAccountById(requestDto.getAccountId());
+        Member member = memberService.findAccountById(requestDto.getAccountId());
         Comment comment = commentService.findCommentById(commentId);
-        if (isExistsByWriterAndComment(account, comment)) {
+        if (isExistsByWriterAndComment(member, comment)) {
             throw new RuntimeException("이미 좋아요를 눌렀습니다.");
         }
 
         CommentHeart commentHeart = CommentHeart.builder()
                 .comment(comment)
-                .account(account)
+                .member(member)
                 .build();
         commentHeartRepository.save(commentHeart);
     }
 
     /* 댓글 좋아요 삭제 */
     public void delete(Long commentId, Long accountId) {
-        Account account = accountService.findAccountById(accountId);
+        Member member = memberService.findAccountById(accountId);
         Comment comment = commentService.findCommentById(commentId);
-        CommentHeart commentHeart = commentHeartRepository.findByWriterAndComment(account, comment)
+        CommentHeart commentHeart = commentHeartRepository.findByWriterAndComment(member, comment)
                 .orElseThrow(() -> new IllegalArgumentException("해당 좋아요가 없습니다."));
         commentHeartRepository.delete(commentHeart);
     }
 
     @Transactional(readOnly = true)
-    public boolean isExistsByWriterAndComment(Account account, Comment comment) {
-        return commentHeartRepository.existsByWriterAndComment(account, comment);
+    public boolean isExistsByWriterAndComment(Member member, Comment comment) {
+        return commentHeartRepository.existsByWriterAndComment(member, comment);
     }
 
     @Transactional(readOnly = true)
