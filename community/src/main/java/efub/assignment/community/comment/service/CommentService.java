@@ -1,12 +1,12 @@
 package efub.assignment.community.comment.service;
 
-
-import efub.assignment.community.member.domain.Member;
-import efub.assignment.community.member.service.MemberService;
+import efub.assignment.community.account.domain.Account;
+import efub.assignment.community.account.service.AccountService;
 import efub.assignment.community.comment.domain.Comment;
-import efub.assignment.community.comment.dto.comment.CommentRequestDto;
+import efub.assignment.community.comment.dto.CommentRequestDto;
 import efub.assignment.community.comment.repository.CommentRepository;
 import efub.assignment.community.exception.CustomDeleteException;
+import efub.assignment.community.exception.ErrorCode;
 import efub.assignment.community.post.domain.Post;
 import efub.assignment.community.post.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,19 +16,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static efub.assignment.community.exception.ErrorCode.PERMISSION_REJECTED_USER;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final MemberService memberService;
+    private final AccountService accountService;
     private final PostService postService;
+    private final PostService noticeService;
     private final CommentRepository commentRepository;
 
+    @Transactional(readOnly = true)
+    public Comment findCommentById(Long commentId){
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new EntityNotFoundException("해당 id를 가진 comment를 찾을 수 없습니다. id="+commentId));
+        return comment;
+    }
+
+    /* 댓글 생성 */
     public Comment saveComment(Long postId, CommentRequestDto requestDto) {
-        Member writer = memberService.findAccountById(Long.valueOf(requestDto.getAccountId()));
+        Account writer = accountService.findAccountById(requestDto.getAccountId());
         Post post = postService.findPostById(postId);
 
         Comment comment = Comment.builder()
@@ -38,45 +45,37 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
 
+
         return comment;
     }
 
-    public List<Comment> findPostCommentList(Long postId) {
+    public List<Comment> findPostCommentList(Long postId){
         Post post = postService.findPostById(postId);
         return commentRepository.findAllByPost(post);
     }
 
-    public List<Comment> findAccountCommentList(Member writer) {
+    /* 작성자의 댓글 목록 조회 */
+    public List<Comment> findAccountCommentList(Account writer){
         return commentRepository.findAllByWriter(writer);
     }
 
-
-    @Transactional(readOnly = true)
-    public Comment findCommentById(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 Comment를 찾을 수 없습니다.id=" + commentId));
+    /* 댓글 수정 */
+    public Comment updateComment(Long id,Long accountId, CommentRequestDto requestdto) {
+        Comment comment = findCommentById(id);
+        if(accountId!=comment.getWriter().getAccountId()){
+            throw new CustomDeleteException(ErrorCode.PERMISSION_REJECTED_USER);
+        }
+        comment.updateComment(requestdto.getContent());
         return comment;
     }
 
-    public Long updateComment(Long commentId, CommentRequestDto dto, Long accountId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 Comment를 찾을 수 없습니다.id=" + commentId));
-        if (accountId != comment.getWriter().getAccountId()) {
-            throw new CustomDeleteException(PERMISSION_REJECTED_USER);
-        }
-        Member member = memberService.findAccountById(Long.parseLong(dto.getAccountId()));
-        comment.update(dto, member);
-        return comment.getCommentId();
-    }
-
-    public void deleteComment(Long id, Long accountId) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 id를 가진 Comment를 찾을 수 없습니다.id=" + id));
-        if (accountId != comment.getWriter().getAccountId()) {
-            throw new CustomDeleteException(PERMISSION_REJECTED_USER);
+    /* 댓글 삭제 */
+    public void deleteComment(Long id, Long accountId){
+        Comment comment = findCommentById(id);
+        if(accountId!=comment.getWriter().getAccountId()){
+            throw new CustomDeleteException(ErrorCode.PERMISSION_REJECTED_USER);
         }
         commentRepository.delete(comment);
     }
-
 
 }

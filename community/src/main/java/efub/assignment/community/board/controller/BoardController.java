@@ -1,8 +1,9 @@
 package efub.assignment.community.board.controller;
 
 import efub.assignment.community.board.domain.Board;
-import efub.assignment.community.board.dto.board.BoardRequestDto;
-import efub.assignment.community.board.dto.board.BoardResponseDto;
+import efub.assignment.community.board.dto.BoardRequestDto;
+import efub.assignment.community.board.dto.BoardResponseDto;
+import efub.assignment.community.board.dto.BoardUpdateDto;
 import efub.assignment.community.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,41 +16,34 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
     private final BoardService boardService;
 
-    /*게시판 생성*/
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public BoardResponseDto createNewBoard(@RequestBody @Valid final BoardRequestDto dto) {
+    public BoardResponseDto createNewBoard(@RequestBody @Valid BoardRequestDto dto){
         Board savedBoard = boardService.createNewBoard(dto);
-        return BoardResponseDto.from(savedBoard);
-
+        return BoardResponseDto.from(savedBoard, savedBoard.getAccount().getNickname());
     }
 
-    /*게시판 조회*/
-    @GetMapping("/{id}")
-    public BoardResponseDto getOneBoard(@PathVariable Long id) {
-        Board board = boardService.findBoardById(id);
-        return BoardResponseDto.from(board);
+    @GetMapping("/{board_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public BoardResponseDto getBoard(@PathVariable(name="board_id")Long board_id){
+        Board board = boardService.findBoardById(board_id);
+        return BoardResponseDto.from(board, board.getAccount().getNickname());
     }
 
-    /*게시판 수정*/
-    @PutMapping("/{id}")
-    public BoardResponseDto updateBoard(@PathVariable Long id, @RequestBody @Valid final BoardRequestDto dto) {
-        Long boardId = boardService.updateBoard(id, dto);
-        Board board = boardService.findBoardById(boardId);
-        return BoardResponseDto.from(board);
+    @PutMapping("/{board_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public BoardResponseDto updateBoard(@PathVariable(name="board_id")Long board_id,
+                                        @RequestBody @Valid final BoardUpdateDto dto){
+        Board board = boardService.updateBoard(board_id, dto);
+        return BoardResponseDto.from(board, board.getAccount().getNickname());
     }
 
-    /*게시판 삭제*/
-    @DeleteMapping("/{id}")
-    public String deleteBoard(@PathVariable Long id,
-                              @RequestParam(name = "accountId") Long account_id) {
-        boardService.deleteBoard(id, account_id);
-        return "성공적으로 삭제되었습니다.";
+    @DeleteMapping("/{board_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String deleteBoard(@PathVariable(name="board_id")Long board_id,
+                              @RequestParam(name="accountId")Long account_id){
+        boardService.deleteBoard(board_id,account_id);
+
+        return "게시판을 삭제하였습니다.";
     }
 }
-
-
-
-
-
-
