@@ -4,20 +4,11 @@ on:
   push:
     branches: [ "main" ] 
 
-#env:
-#  AWS_REGION: ap-northeast-2
-#  S3_BUCKET_NAME: efub-week10-github-actions-s3-bucket
-#  CODE_DEPLOY_APPLICATION_NAME: efub-week10-codedeploy-app
-#  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: efub-week10-codedeploy-deployment-group
-#
-#permissions:
-#  contents: read
+
 
 jobs:
   deploy:
-#    name: Deploy
     runs-on: ubuntu-latest
-#    environment: production
 
     steps:
       - uses: actions/checkout@v3
@@ -37,7 +28,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          cd ./blog
+          cd ./community
           chmod +x ./gradlew
           ./gradlew build -x test
 
