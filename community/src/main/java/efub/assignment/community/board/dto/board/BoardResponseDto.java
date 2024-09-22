@@ -11,27 +11,24 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class BoardResponseDto { // 게시판 생성, 조회 시의 응답
-    private long boardId;
+public class BoardResponseDto {
+    private Long boardId;
     private String boardName;
-    private String boardInfo;
+    private String boardDescription;
     private String boardNotice;
-    private String hostNickname;
-
+    private String ownerNickname;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public static BoardResponseDto from(Board board){
+    public static BoardResponseDto from(Board board,String ownerNickname){
         return new BoardResponseDto(
                 board.getBoardId(),
                 board.getBoardName(),
-                board.getBoardInfo(),
+                board.getBoardDescription(),
                 board.getBoardNotice(),
-                board.getHostNickname(),
+                ownerNickname,
                 board.getCreatedDate(),
                 board.getModifiedDate()
         );
     }
-
 }
-
