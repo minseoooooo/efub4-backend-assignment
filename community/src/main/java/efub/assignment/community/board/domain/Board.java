@@ -28,7 +28,7 @@ public class Board extends BaseTimeEntity {
     private String boardNotice;
 
     @Builder
-    public Board(Account account, String boardName, String boardDescription, String boardNotice){
+    public Board(Account account, String boardName, String boardDescription, String boardNotice) {
         this.account = account;
         this.boardName = boardName;
         this.boardDescription = boardDescription;
@@ -36,7 +36,7 @@ public class Board extends BaseTimeEntity {
     }
 
     // 게시판의 주인을 수정하는 메소드
-    public void update( Account account){
+    public void update(Account account){
         this.account = account;
     }
 
